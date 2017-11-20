@@ -1,0 +1,19 @@
+<ul id="navigation">
+  {% for entry in entries %}
+  <li>
+    <dl>
+      <dt>name</dt>
+      <dd>{{ entry['name'] }}<dd>
+
+      <dt>ip</dt>
+      <dd>{{ entry['IP'] }}<dd>
+
+      <dt>version</dt>
+      <dd>{{ entry['version'] }}<dd>
+
+      <dt>capabilities</dt>
+      <dd>{{ entry['capabilities'] }}<dd>
+    </dl>
+  </li>
+  {% endfor %}
+</ul>
