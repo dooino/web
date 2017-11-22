@@ -32,19 +32,15 @@ angular.module('DooinosAppServices')
   });
 }])
 .factory('Routine', ['$resource', function($resource){
-    return $resource('/routines', {}, {
-      query: {
-        method: 'POST',
-        //isArray: true
-      }
-    });
+    return $resource('/routines');
 }]);
 
 angular.module('DooinosAppControllers', ['DooinosAppServices']);
 
 angular.module('DooinosAppControllers')
-.controller('ListController', ['$scope', 'Dooinos', function($scope, Dooinos) {
+.controller('ListController', ['$scope', 'Dooinos', 'Routine', function($scope, Dooinos, Routine) {
   $scope.dooinos = Dooinos.query();
+  $scope.routines = Routine.query();
 }])
 .controller('NewRoutineController', ['$scope', '$location', 'Dooinos', 'Routine', function($scope, $location, Dooinos, Routine) {
   $scope.dooinos = Dooinos.query({}, function(){

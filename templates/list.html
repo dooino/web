@@ -1,19 +1,5 @@
-{% raw %}
-<dl ng-repeat="dooino in dooinos">
-  <dt>name</dt>
-  <dd>{{ dooino.name }}<dd>
+<div class="columns">
+  <div class="column" ng-include="'templates/dooinos.html'"></div>
 
-  <dt>ip</dt>
-  <dd>{{ dooino.IP }}<dd>
-
-  <dt>version</dt>
-  <dd>{{ dooino.version }}<dd>
-
-  <dt>capabilities</dt>
-  <dd>{{ dooino.capabilities }}<dd>
-</dl>
-{% endraw %}
-
-<div>
-  <a href="/new" class="button is-info">New Routine</a>
-<div>
+  <div class="column" ng-include="'templates/routines.html'"></div>
+</div>

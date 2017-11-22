@@ -1,0 +1,18 @@
+{% raw %}
+<h2 class="title is-2">Dooinos</h2>
+<dl ng-repeat="dooino in dooinos">
+  <dt>Name:</dt>
+  <dd>{{ dooino.name }}</dd>
+
+  <dt>Actions</dt>
+  <dd class="content">
+    <ul>
+      <li ng-repeat="action in dooino.in">
+        <a href="{{ action.action }}" target="_blank">
+          {{ action.name }}
+        </a>
+      </li>
+    </ul>
+  </dd>
+</dl>
+{% endraw %}

@@ -105,7 +105,7 @@ class Worker:
 
 
 if __name__ == "__main__":
-    LOOP_TIME = 5
+    LOOP_TIME = 2
     while True:
         Worker().run()
         time.sleep(LOOP_TIME)

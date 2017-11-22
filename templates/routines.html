@@ -1,0 +1,12 @@
+{% raw %}
+<h2 class="title is-2">Routines</h2>
+<div class="content">
+  <ul ng-repeat="routine in routines">
+    <li>When <strong> {{ routine.selectedOut }} </strong> is <strong>{{ routine.selectedOperation }}</strong> than <strong>{{ routine.selectedValue }}</strong> then execute <strong>{{ routine.selectedIn }}</strong></li>
+  </ul>
+</div>
+<div>
+  <br/>
+  <a href="/new" class="button is-info">New Routine</a>
+<div>
+{% endraw %}

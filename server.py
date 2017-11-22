@@ -25,19 +25,27 @@ def dashboard():
 def new():
     return render_template('application.html')
 
-@app.route("/routines", methods=['POST'])
+@app.route("/routines", methods=['POST', 'GET'])
 def routines():
-    info = request.get_json()
-    data = {
-            'selectedIn': info.get('selectedIn'),
-            'selectedOut': info.get('selectedOut'),
-            'selectedValue': info.get('selectedValue'),
-            'selectedOperation': info.get('selectedOperation'),
-    }
+    if request.method == 'POST':
+        info = request.get_json()
+        data = {
+                'selectedIn': info.get('selectedIn'),
+                'selectedOut': info.get('selectedOut'),
+                'selectedValue': info.get('selectedValue'),
+                'selectedOperation': info.get('selectedOperation'),
+        }
 
-    r.sadd('routines', json.dumps(data))
+        r.sadd('routines', json.dumps(data))
 
-    return jsonify({})
+        return jsonify({})
+    else:
+        data = []
+
+        for routine in r.smembers('routines'):
+            data.append(json.loads(routine))
+
+        return jsonify(data)
 
 @app.route("/dooinos")
 def dooinos():
