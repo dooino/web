@@ -1,19 +1,19 @@
-<ul id="navigation">
-  {% for entry in entries %}
-  <li>
-    <dl>
-      <dt>name</dt>
-      <dd>{{ entry['name'] }}<dd>
+{% raw %}
+<dl ng-repeat="dooino in dooinos">
+  <dt>name</dt>
+  <dd>{{ dooino.name }}<dd>
 
-      <dt>ip</dt>
-      <dd>{{ entry['IP'] }}<dd>
+  <dt>ip</dt>
+  <dd>{{ dooino.IP }}<dd>
 
-      <dt>version</dt>
-      <dd>{{ entry['version'] }}<dd>
+  <dt>version</dt>
+  <dd>{{ dooino.version }}<dd>
 
-      <dt>capabilities</dt>
-      <dd>{{ entry['capabilities'] }}<dd>
-    </dl>
-  </li>
-  {% endfor %}
-</ul>
+  <dt>capabilities</dt>
+  <dd>{{ dooino.capabilities }}<dd>
+</dl>
+{% endraw %}
+
+<div>
+  <a href="/new" class="button is-info">New Routine</a>
+<div>

@@ -1,0 +1,24 @@
+{
+  "name": "dooino",
+  "homepage": "https://github.com/dooino/web",
+  "authors": [
+    "Alejandro Dev. <aeinformatico@gmail.com>"
+  ],
+  "description": "",
+  "main": "",
+  "license": "MIT",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "angular": "^1.6.6",
+    "angular-resource": "^1.6.6",
+    "angular-route": "^1.6.6",
+    "bulma": "^0.6.1"
+  }
+}
