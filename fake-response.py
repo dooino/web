@@ -11,7 +11,23 @@ app = Flask(__name__)
 def fake():
     return jsonify(
             {
-                'name': 'dooino',
+                'name': 'dooino-xyz',
+                'in': [
+                    {
+                        'name': 'on',
+                        'action': 'http://local/on'
+                    },
+                    {
+                        'name': 'off',
+                        'action': 'http://local/on'
+                    }
+                ],
+                'out': [
+                    {
+                        'name': 'status',
+                        'action': 'http://local/on'
+                    }
+                ],
                 'version': 123,
                 'capabilities': [],
             })

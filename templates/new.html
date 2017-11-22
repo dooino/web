@@ -1,36 +1,36 @@
 <form>
-  <h3 class="title is-3">I want my</h3>
+  <h3 class="title is-3">If</h3>
   <div class="control select">
     {% raw %}
-    <select ng-model="selectedDooino" ng-options="dooino.name as dooino.name for dooino in dooinos" ng-change="loadCapabilities(dooino)">
-      <option value="">Select device...</option>
-    </select>
-    {% endraw %}
-  </div>
-
-  <h3 class="title is-3">To</h3>
-  <div class="control select">
-    {% raw %}
-    <select ng-disabled="!capabilities.length" ng-model="selectedCapability" ng-options="capability.id as capability.name for capability in capabilities" ng-change="loadDooinos()">
+    <select ng-disabled="!outs.length" ng-model="selectedOut" ng-options="capability.id as capability.name for capability in outs">
       <option value="">Select action...</option>
     </select>
     {% endraw %}
   </div>
 
-  <h3 class="title is-3">If</h3>
-  <div class="control select">
-    <select class="is-medium">
-      <option>Dooino-xxx</option>
-    </select>
-  </div>
-
-  <h3 class="title is-3">Reads</h3>
+  <h3 class="title is-3">Is</h3>
   <div class="columns">
     <div class="column is-one-fifth">
+      <div class="control select">
+        <select>
+          <option value="0">equals</option>
+          <option value="1">greater</option>
+          <option value="2">smaller</option>
+        </select>
+      </div>
       <div class="control">
         <input type="text" class="input is-medium">
       </div>
     </div>
+  </div>
+
+  <h3 class="title is-3">Then</h3>
+  <div class="control select">
+    {% raw %}
+    <select ng-disabled="!ins.length" ng-model="selectedIn" ng-options="capability.id as capability.name for capability in ins">
+      <option value="">Select action...</option>
+    </select>
+    {% endraw %}
   </div>
 </form>
 

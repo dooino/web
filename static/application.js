@@ -39,26 +39,26 @@ angular.module('DooinosAppControllers')
   $scope.dooinos = Dooinos.query();
 }])
 .controller('NewRoutineController', ['$scope', 'Dooinos', function($scope, Dooinos) {
-  $scope.dooinos = Dooinos.query();
+  $scope.dooinos = Dooinos.query({}, function(){
+    $scope.ins = $scope.dooinos.map(function(dooino) {
+      return {
+        id: dooino.name,
+        name: dooino.name + " " + dooino["in"][0].name // in is reserved
+      };
+    });
 
-  var capabilities = {
-    dooino: [{
-      id: 1,
-      name: "Turn on",
-    },
-    {
-      id: 2,
-      name: "Turn off",
-    }]
-  };
+    console.log($scope.ins);
 
-  $scope.loadCapabilities = function() {
-    console.log($scope.selectedDooino);
-    $scope.capabilities = capabilities[$scope.selectedDooino]
-  };
+    $scope.outs = $scope.dooinos.map(function(dooino) {
+      return {
+        id: dooino.name,
+        name: dooino.name + " " + dooino.out[0].name
+      };
+    });
+  });
 
   $scope.loadDooinos = function() {
     $scope.targetDooinos = function() {
-    }
+    };
   };
 }]);
