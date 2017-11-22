@@ -30,6 +30,14 @@ angular.module('DooinosAppServices')
       isArray: true,
     }
   });
+}])
+.factory('Routine', ['$resource', function($resource){
+    return $resource('/routines', {}, {
+      query: {
+        method: 'POST',
+        //isArray: true
+      }
+    });
 }]);
 
 angular.module('DooinosAppControllers', ['DooinosAppServices']);
@@ -38,27 +46,38 @@ angular.module('DooinosAppControllers')
 .controller('ListController', ['$scope', 'Dooinos', function($scope, Dooinos) {
   $scope.dooinos = Dooinos.query();
 }])
-.controller('NewRoutineController', ['$scope', 'Dooinos', function($scope, Dooinos) {
+.controller('NewRoutineController', ['$scope', '$location', 'Dooinos', 'Routine', function($scope, $location, Dooinos, Routine) {
   $scope.dooinos = Dooinos.query({}, function(){
+    var ins = [];
+
     $scope.ins = $scope.dooinos.map(function(dooino) {
       return {
-        id: dooino.name,
+        id: dooino["in"][0].action,
         name: dooino.name + " " + dooino["in"][0].name // in is reserved
       };
     });
 
-    console.log($scope.ins);
-
     $scope.outs = $scope.dooinos.map(function(dooino) {
       return {
-        id: dooino.name,
+        id: dooino.out[0].action,
         name: dooino.name + " " + dooino.out[0].name
       };
     });
   });
 
-  $scope.loadDooinos = function() {
-    $scope.targetDooinos = function() {
-    };
+  $scope.createRoutine = function() {
+    Routine.save({
+      selectedOut: $scope.selectedOut,
+      selectedOperation: $scope.selectedOperation,
+      selectedValue: $scope.selectedValue,
+      selectedIn: $scope.selectedIn,
+    });
+
+    $scope.selectedOut = null;
+    $scope.selectedOperation = null;
+    $scope.selectedValue = null;
+    $scope.selectedIn = null;
+
+    $location.path("/");
   };
 }]);

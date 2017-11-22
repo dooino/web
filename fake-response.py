@@ -7,6 +7,18 @@ from flask import jsonify
 
 app = Flask(__name__)
 
+@app.route("/status")
+def status():
+    return jsonify({'value': 10})
+
+@app.route("/on")
+def on():
+    return jsonify({})
+
+@app.route("/off")
+def off():
+    return jsonify({})
+
 @app.route("/manifest.json")
 def fake():
     return jsonify(
@@ -15,17 +27,17 @@ def fake():
                 'in': [
                     {
                         'name': 'on',
-                        'action': 'http://local/on'
+                        'action': 'http://127.0.0.1:6000/on'
                     },
                     {
                         'name': 'off',
-                        'action': 'http://local/on'
+                        'action': 'http://127.0.0.1:6000/off'
                     }
                 ],
                 'out': [
                     {
                         'name': 'status',
-                        'action': 'http://local/on'
+                        'action': 'http://127.0.0.1:6000/status'
                     }
                 ],
                 'version': 123,

@@ -12,14 +12,14 @@
   <div class="columns">
     <div class="column is-one-fifth">
       <div class="control select">
-        <select>
+        <select ng-model="selectedOperation">
           <option value="0">equals</option>
           <option value="1">greater</option>
           <option value="2">smaller</option>
         </select>
       </div>
       <div class="control">
-        <input type="text" class="input is-medium">
+        <input type="text" ng-model="selectedValue" class="input is-medium">
       </div>
     </div>
   </div>
@@ -35,7 +35,7 @@
 </form>
 
 <div>
-  <a href="/" class="button is-success">Create</a>
+  <button ng-disabled="!selectedIn || !selectedOut || !selectedValue || !selectedOperation" class="button is-success" ng-click="createRoutine()">Create</button>
 <div>
 
 <div>

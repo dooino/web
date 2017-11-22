@@ -2,11 +2,13 @@
 
 import logging
 import redis
+import json
 import custom_logging
 
 from flask import Flask
 from flask import render_template
 from flask import jsonify
+from flask import request
 
 from features_fetcher import FeaturesFetcher
 
@@ -22,6 +24,20 @@ def dashboard():
 @app.route("/new")
 def new():
     return render_template('application.html')
+
+@app.route("/routines", methods=['POST'])
+def routines():
+    info = request.get_json()
+    data = {
+            'selectedIn': info.get('selectedIn'),
+            'selectedOut': info.get('selectedOut'),
+            'selectedValue': info.get('selectedValue'),
+            'selectedOperation': info.get('selectedOperation'),
+    }
+
+    r.sadd('routines', json.dumps(data))
+
+    return jsonify({})
 
 @app.route("/dooinos")
 def dooinos():
