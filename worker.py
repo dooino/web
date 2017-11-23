@@ -61,13 +61,14 @@ class Checker:
         self.operation = operation
 
     def run(self):
+        logger.debug(type(self.output))
         logger.debug("Checking %s agains %s", self.output, self.input)
 
-        if self.output is None or self.input is None or self.operation is None:
+        if self.output == "null" or self.output is None or self.input is None or self.operation is None:
             return False
 
-        output = int(self.output)
-        input = int(self.input)
+        output = float(self.output)
+        input = float(self.input)
         operation = int(self.operation)
 
         if operation is 0:
@@ -159,7 +160,7 @@ class RoutineWorker:
 if __name__ == "__main__":
     LOOP_TIME = 2
     while True:
-        PresenceWorker().run()
+        # PresenceWorker().run()
         RoutineWorker().run()
 
         time.sleep(LOOP_TIME)
