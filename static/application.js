@@ -51,6 +51,7 @@ angular.module('DooinosAppControllers')
       dooino["in"].forEach(function(url) { // in is reserved
         $scope.ins.push({
           id: url.action,
+          dooino: dooino.name,
           name: dooino.name + " " + url.name
         });
       });
@@ -60,24 +61,35 @@ angular.module('DooinosAppControllers')
       dooino.out.forEach(function(url) {
         $scope.outs.push({
           id: url.action,
+          dooino: dooino.name,
           name: dooino.name + " " + url.name
         });
       });
     });
   });
 
+  $scope.handleOut = function(){
+    $scope.selectedOutDooino = $scope.outs.find(function(out){
+      return out.id == $scope.selectedOut;
+    });
+  };
+
+  $scope.handleIn = function(){
+    $scope.selectedInDooino = $scope.ins.find(function(_in){
+      return _in.id == $scope.selectedIn;
+    });
+  };
+
   $scope.createRoutine = function() {
+
     Routine.save({
       selectedOut: $scope.selectedOut,
       selectedOperation: $scope.selectedOperation,
       selectedValue: $scope.selectedValue,
       selectedIn: $scope.selectedIn,
+      selectedOutDooino: $scope.selectedOutDooino.dooino,
+      selectedInDooino: $scope.selectedInDooino.dooino,
     });
-
-    $scope.selectedOut = null;
-    $scope.selectedOperation = null;
-    $scope.selectedValue = null;
-    $scope.selectedIn = null;
 
     $location.path("/");
   };

@@ -34,6 +34,8 @@ def routines():
             'selectedOut': info.get('selectedOut'),
             'selectedValue': info.get('selectedValue'),
             'selectedOperation': info.get('selectedOperation'),
+            'selectedInDooino': info.get('selectedInDooino'),
+            'selectedOutDooino': info.get('selectedOutDooino'),
         }
 
         r.sadd('routines', json.dumps(data))

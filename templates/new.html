@@ -2,8 +2,9 @@
   <h3 class="title is-3">If</h3>
   <div class="control select">
     {% raw %}
-    <select ng-disabled="!outs.length" ng-model="selectedOut" ng-options="capability.id as capability.name for capability in outs">
+    <select ng-disabled="!outs.length" ng-model="selectedOut" ng-change="handleOut()">
       <option value="">Select action...</option>
+      <option ng-repeat="out in outs" value="{{ out.id }}" data-dooino="{{ out.dooino }}"> {{ out.name }}</option>
     </select>
     {% endraw %}
   </div>
@@ -27,8 +28,9 @@
   <h3 class="title is-3">Then</h3>
   <div class="control select">
     {% raw %}
-    <select ng-disabled="!ins.length" ng-model="selectedIn" ng-options="capability.id as capability.name for capability in ins">
+    <select ng-disabled="!ins.length" ng-model="selectedIn" ng-change="handleIn()">
       <option value="">Select action...</option>
+      <option ng-repeat="in in ins" value="{{ in.id }}" data-dooino="{{ in.dooino }}"> {{ in.name }}</option>
     </select>
     {% endraw %}
   </div>

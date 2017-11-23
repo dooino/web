@@ -24,6 +24,7 @@ def fake():
     return jsonify(
             {
                 'name': 'dooino-xyz',
+                'ip': '127.0.0.1',
                 'in': [
                     {
                         'name': 'on',
