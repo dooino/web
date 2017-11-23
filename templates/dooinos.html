@@ -1,16 +1,21 @@
 {% raw %}
-<h2 class="title is-2">Dooinos</h2>
-<dl ng-repeat="dooino in dooinos">
-  <dt>Name:</dt>
-  <dd>{{ dooino.name }}</dd>
+<div class="content">
+  <h2 class="title is-2">Dooinos</h2>
+  <dl ng-repeat="dooino in dooinos">
+    <dt>Name:</dt>
+    <dd>{{ dooino.name }}</dd>
 
-  <dt>Actions</dt>
-  <dd class="content">
-    <div class="field is-grouped">
-      <p class="control" ng-repeat="action in dooino.in">
-        <button class="button" ng-click="handleClick(action.action)"> {{ action.name }} </button>
-      </p>
-    </div>
-  </dd>
-</dl>
+    <dt>Last Updated:</dt>
+    <dd>{{ dooino.updated_at }}</dd>
+
+    <dt>Actions</dt>
+    <dd class="content">
+      <div class="field is-grouped">
+        <p class="control" ng-repeat="action in dooino.in">
+          <button class="button" ng-click="handleClick(action.action)"> {{ action.name }} </button>
+        </p>
+      </div>
+    </dd>
+  </dl>
+</div>
 {% endraw %}

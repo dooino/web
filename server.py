@@ -11,6 +11,7 @@ from flask import jsonify
 from flask import request
 
 from features_fetcher import FeaturesFetcher
+from dooino import Dooino
 
 app = Flask(__name__)
 
@@ -53,10 +54,14 @@ def routines():
 def dooinos():
     data = []
 
-    for entry in r.smembers('dooinos'):
-        feature = FeaturesFetcher(r.get(entry))
+    for entry in r.smembers("dooinos"):
+        device = Dooino(entry)
+        device.touch()
+        feature = FeaturesFetcher(device.get("ip"))
         feature.fetch()
-        data.append(feature.data)
+        new_data = feature.data
+        new_data["updated_at"] = device.get("updated_at")
+        data.append(new_data)
 
     return jsonify(data)
 

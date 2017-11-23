@@ -7,19 +7,18 @@ import logging
 import socket
 import sys
 from time import sleep
-import redis
 from zeroconf import ServiceBrowser, ServiceStateChange, Zeroconf
 
 import custom_logging
-
-REDIS_KEY = "dooinos"
+from dooino import Dooino
 
 logger = logging.getLogger("dooino")
-r = redis.StrictRedis(host="localhost", port=6379, db=0)
 
 def on_service_state_change(zeroconf, service_type, name, state_change):
     logger.info("Service %s of type %s state changed: %s" % (name, service_type, state_change))
     logger.info("State change: %s" % state_change)
+
+    device = Dooino(name)
 
     if state_change is ServiceStateChange.Added:
         info = zeroconf.get_service_info(service_type, name)
@@ -28,8 +27,8 @@ def on_service_state_change(zeroconf, service_type, name, state_change):
             logger.info("  Weight: %d, priority: %d" % (info.weight, info.priority))
             logger.info("  Server: %s" % (info.server,))
 
-            r.sadd(REDIS_KEY, name)
-            r.set(name, "%s:%d" % (socket.inet_ntoa(info.address), info.port))
+            device.register()
+            device.set("ip", ("%s:%d" % (socket.inet_ntoa(info.address), info.port)))
 
             if info.properties:
                 logger.info("  Properties are:")
@@ -43,8 +42,7 @@ def on_service_state_change(zeroconf, service_type, name, state_change):
     elif state_change is ServiceStateChange.Removed:
         logger.info("Removing %s" % (name))
 
-        r.srem(REDIS_KEY, name)
-        r.delete(name)
+        device.destroy()
 
 if __name__ == '__main__':
     logging.basicConfig(level=logging.DEBUG)
