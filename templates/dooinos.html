@@ -8,14 +8,21 @@
     <dt>Last Updated:</dt>
     <dd>{{ dooino.updated_at }}</dd>
 
-    <dt>Actions</dt>
-    <dd class="content">
-      <div class="field is-grouped">
-        <p class="control" ng-repeat="action in dooino.in">
-          <button class="button" ng-click="handleClick(action.action)"> {{ action.name }} </button>
-        </p>
-      </div>
-    </dd>
+    <div class="content" ng-show="dooino.in.length && dooino.online">
+      <dt>Actions</dt>
+      <dd>
+        <div class="field is-grouped">
+          <p class="control" ng-repeat="action in dooino.in">
+            <button class="button" ng-click="handleClick(action.action)"> {{ action.name }} </button>
+          </p>
+        </div>
+      </dd>
+    </div>
+
+    <span class="tag is-success" ng-show="dooino.online">Online</span>
+    <span class="tag is-danger" ng-hide="dooino.online">Offline</span>
+
+    <hr />
   </dl>
 </div>
 {% endraw %}
