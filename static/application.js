@@ -38,9 +38,31 @@ angular.module('DooinosAppServices')
 angular.module('DooinosAppControllers', ['DooinosAppServices']);
 
 angular.module('DooinosAppControllers')
-.controller('ListController', ['$scope', '$http', 'Dooinos', 'Routine', function($scope, $http, Dooinos, Routine) {
-  $scope.dooinos = Dooinos.query();
-  $scope.routines = Routine.query();
+.controller('ListController', ['$scope', '$http', '$interval', 'Dooinos', 'Routine', function($scope, $http, $interval, Dooinos, Routine) {
+  var dooinos = [];
+
+  Routine.query({}, function(data){
+    $scope.routines = data;
+
+    $scope.dooinoName = function(id){
+      var dooino = $scope.dooinos.find(function(dooino){
+        return dooino.id == id;
+      });
+
+      if(dooino) {
+        return dooino.name
+      }
+      else {
+        return "";
+      }
+    };
+  });
+
+  var queryData = function() {
+    dooinos = Dooinos.query({}, function(){
+      $scope.dooinos = dooinos;
+    });
+  };
 
   var operations = ["equals", "greater", "smaller"];
 
@@ -48,15 +70,13 @@ angular.module('DooinosAppControllers')
     return operations[index];
   };
 
-  $scope.dooinoName = function(id){
-    return $scope.dooinos.find(function(dooino){
-      return dooino.id == id;
-    }).name;
-  };
-
   $scope.handleClick = function(action){
     $http.get(action);
   };
+
+  $interval(queryData, 3000);
+
+  queryData();
 }])
 .controller('NewRoutineController', ['$scope', '$location', 'Dooinos', 'Routine', function($scope, $location, Dooinos, Routine) {
   $scope.dooinos = Dooinos.query({}, function(){

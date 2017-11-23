@@ -8,11 +8,11 @@
     <dt>Last Updated:</dt>
     <dd>{{ dooino.updated_at }}</dd>
 
-    <div class="content" ng-show="dooino.in.length && dooino.online">
+    <div class="content" ng-show="dooino.online">
       <dt>Actions</dt>
       <dd>
         <div class="field is-grouped">
-          <p class="control" ng-repeat="action in dooino.in">
+          <p class="control" ng-repeat="action in dooino.in track by $index">
             <button class="button" ng-click="handleClick(action.action)"> {{ action.name }} </button>
           </p>
         </div>
