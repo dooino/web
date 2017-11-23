@@ -6,13 +6,11 @@
 
   <dt>Actions</dt>
   <dd class="content">
-    <ul>
-      <li ng-repeat="action in dooino.in">
-        <a href="{{ action.action }}" target="_blank">
-          {{ action.name }}
-        </a>
-      </li>
-    </ul>
+    <div class="field is-grouped">
+      <p class="control" ng-repeat="action in dooino.in">
+        <button class="button" ng-click="handleClick(action.action)"> {{ action.name }} </button>
+      </p>
+    </div>
   </dd>
 </dl>
 {% endraw %}

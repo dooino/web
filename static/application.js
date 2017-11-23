@@ -38,9 +38,19 @@ angular.module('DooinosAppServices')
 angular.module('DooinosAppControllers', ['DooinosAppServices']);
 
 angular.module('DooinosAppControllers')
-.controller('ListController', ['$scope', 'Dooinos', 'Routine', function($scope, Dooinos, Routine) {
+.controller('ListController', ['$scope', '$http', 'Dooinos', 'Routine', function($scope, $http, Dooinos, Routine) {
   $scope.dooinos = Dooinos.query();
   $scope.routines = Routine.query();
+
+  var operations = ["equals", "greater", "smaller"];
+
+  $scope.mapOperation = function(index){
+    return operations[index];
+  };
+
+  $scope.handleClick = function(action){
+    $http.get(action);
+  };
 }])
 .controller('NewRoutineController', ['$scope', '$location', 'Dooinos', 'Routine', function($scope, $location, Dooinos, Routine) {
   $scope.dooinos = Dooinos.query({}, function(){
