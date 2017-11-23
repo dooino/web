@@ -1,8 +1,6 @@
 #!/usr/bin/env python
 
 import logging
-import redis
-import json
 import custom_logging
 
 from flask import Flask
@@ -13,9 +11,11 @@ from flask import request
 from dooino import Dooino
 from dooino_list import DooinoList
 
+from routine import Routine
+from routine_list import RoutineList
+
 app = Flask(__name__)
 
-r = redis.StrictRedis(host='localhost', port=6379, db=0)
 logger = logging.getLogger(__name__)
 
 @app.route("/")
@@ -29,26 +29,17 @@ def new():
 @app.route("/routines", methods=['POST', 'GET'])
 def routines():
     if request.method == 'POST':
-        info = request.get_json()
-        data = {
-            'selectedIn': info.get('selectedIn'),
-            'selectedOut': info.get('selectedOut'),
-            'selectedValue': info.get('selectedValue'),
-            'selectedOperation': info.get('selectedOperation'),
-            'selectedInDooino': info.get('selectedInDooino'),
-            'selectedOutDooino': info.get('selectedOutDooino'),
-        }
+        params = request.get_json()
+        data = {}
 
-        r.sadd('routines', json.dumps(data))
+        for key in params:
+            data[key] = params.get(key)
+
+        Routine(data).save()
 
         return jsonify({})
     else:
-        data = []
-
-        for routine in r.smembers('routines'):
-            data.append(json.loads(routine))
-
-        return jsonify(data)
+        return jsonify(RoutineList().run())
 
 @app.route("/dooinos")
 def dooinos():
