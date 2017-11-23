@@ -48,6 +48,12 @@ angular.module('DooinosAppControllers')
     return operations[index];
   };
 
+  $scope.dooinoName = function(id){
+    return $scope.dooinos.find(function(dooino){
+      return dooino.id == id;
+    }).name;
+  };
+
   $scope.handleClick = function(action){
     $http.get(action);
   };
@@ -60,9 +66,10 @@ angular.module('DooinosAppControllers')
     $scope.dooinos.map(function(dooino) {
       dooino["in"].forEach(function(url) { // in is reserved
         $scope.ins.push({
-          id: url.action,
-          dooino: dooino.name,
-          name: dooino.name + " " + url.name
+          value: url.action,
+          id: dooino.id,
+          name: dooino.name + " " + url.name,
+          action: url.name
         });
       });
     });
@@ -70,9 +77,10 @@ angular.module('DooinosAppControllers')
     $scope.dooinos.map(function(dooino) {
       dooino.out.forEach(function(url) {
         $scope.outs.push({
-          id: url.action,
-          dooino: dooino.name,
-          name: dooino.name + " " + url.name
+          value: url.action,
+          id: dooino.id,
+          name: dooino.name + " " + url.name,
+          action: url.name
         });
       });
     });
@@ -80,26 +88,33 @@ angular.module('DooinosAppControllers')
 
   $scope.handleOut = function(){
     $scope.selectedOutDooino = $scope.outs.find(function(out){
-      return out.id == $scope.selectedOut;
+      return out.value == $scope.selectedOut;
     });
   };
 
   $scope.handleIn = function(){
     $scope.selectedInDooino = $scope.ins.find(function(_in){
-      return _in.id == $scope.selectedIn;
+      return _in.value == $scope.selectedIn;
     });
   };
 
   $scope.createRoutine = function() {
+    var data = {
+      source: {
+        id: $scope.selectedOutDooino.id,
+        action: $scope.selectedOutDooino.action
+      },
+      target: {
+        id: $scope.selectedInDooino.id,
+        action: $scope.selectedInDooino.action
+      },
+      condition: {
+        value: $scope.selectedValue,
+        operation: $scope.selectedOperation
+      }
+    };
 
-    Routine.save({
-      selectedOut: $scope.selectedOut,
-      selectedOperation: $scope.selectedOperation,
-      selectedValue: $scope.selectedValue,
-      selectedIn: $scope.selectedIn,
-      selectedOutDooino: $scope.selectedOutDooino.dooino,
-      selectedInDooino: $scope.selectedInDooino.dooino,
-    });
+    Routine.save(data);
 
     $location.path("/");
   };

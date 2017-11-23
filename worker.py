@@ -9,6 +9,9 @@ import os
 
 import custom_logging
 
+from routine_list import RoutineList
+from dooino import Dooino
+
 logger = logging.getLogger(__name__)
 
 class Ping:
@@ -30,12 +33,14 @@ class Ping:
 
 
 class Requester:
-    def __init__(self, url):
-        self.url = url
+    def __init__(self, source):
+        self.source = source
+        self.dooino = Dooino(source["id"])
 
     def run(self):
         try:
-            data = requests.get(self.url, timeout=0.5).json()
+            url = self.dooino.get_out_action(self.source["action"])
+            data = requests.get(url, timeout=1).json()
             return data["value"]
         except Exception:
             logger.fatal("Could not connect", exc_info=True)
@@ -43,12 +48,14 @@ class Requester:
 
 
 class Executor:
-    def __init__(self, url):
-        self.url = url
+    def __init__(self, target):
+        self.target = target
+        self.dooino = Dooino(target["id"])
 
     def run(self):
         try:
-            requests.get(self.url, timeout=0.5)
+            url = self.dooino.get_in_action(self.target["action"])
+            requests.get(url, timeout=0.5)
         except Exception:
             logger.fatal("Could not execute", exc_info=True)
             return None
@@ -61,7 +68,6 @@ class Checker:
         self.operation = operation
 
     def run(self):
-        logger.debug(type(self.output))
         logger.debug("Checking %s agains %s", self.output, self.input)
 
         if self.output == "null" or self.output is None or self.input is None or self.operation is None:
@@ -90,13 +96,13 @@ class Processor:
         self.routine = routine
 
     def run(self):
-        out = Requester(self.routine["selectedOut"]).run()
-        operation = self.routine["selectedOperation"]
-        value = self.routine["selectedValue"]
+        out = Requester(self.routine["source"]).run()
+        operation = self.routine["condition"]["operation"]
+        value = self.routine["condition"]["value"]
 
         if Checker(out, value, operation).run():
             logger.info("Executing routine...")
-            Executor(self.routine["selectedIn"]).run()
+            Executor(self.routine["target"]).run()
         else:
             logger.info("Skipping routine...")
 
@@ -128,28 +134,26 @@ class PresenceWorker:
 
 
 class RoutineWorker:
-    ROUTINES_KEY = "routines"
-
     def __init__(self):
         logger.info("Initializing worker...")
-        self.redis = redis.StrictRedis(host='localhost', port=6379, db=0)
 
     def run(self):
         logger.info("Running...")
-        routines = self.redis.smembers(self.ROUTINES_KEY)
 
-        for data in routines:
-            routine = json.loads(data)
+        for data in RoutineList().run():
+            routine = data
 
             if self._is_valid_routine(routine):
                 Processor(routine).run()
 
     def _is_valid_routine(self, routine):
         if(
-            routine["selectedIn"] is None or
-            routine["selectedOut"] is None or
-            routine["selectedValue"] is None or
-            routine["selectedOperation"] is None
+            routine.get("source", {}).get("id") is None or
+            routine.get("source", {}).get("action") is None or
+            routine.get("target", {}).get("id") is None or
+            routine.get("target", {}).get("action") is None or
+            routine.get("condition", {}).get("value") is None or
+            routine.get("condition", {}).get("operation") is None
            ):
             logger.fatal("Could not process routine: %s", routine)
             return False
@@ -158,7 +162,7 @@ class RoutineWorker:
 
 
 if __name__ == "__main__":
-    LOOP_TIME = 2
+    LOOP_TIME = 5
     while True:
         # PresenceWorker().run()
         RoutineWorker().run()

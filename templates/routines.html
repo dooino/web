@@ -1,8 +1,11 @@
 {% raw %}
-<h2 class="title is-2">Routines</h2>
 <div class="content">
+  <h2 class="title is-2">Routines</h2>
   <ul ng-repeat="routine in routines">
-    <li>When <strong> {{ routine.selectedOutDooino }} </strong> is <strong>{{ mapOperation(routine.selectedOperation) }}</strong> than <strong>{{ routine.selectedValue }}</strong> then execute <strong>{{ routine.selectedIn }}</strong></li>
+    <li>When <strong>{{ dooinoName(routine.source.id) }}</strong> <strong>{{ routine.source.action }}</strong> is <strong>{{ mapOperation(routine.condition.operation) }}</strong>
+      than <strong>{{ routine.condition.value }}</strong> then execute <strong>{{ routine.target.action }}</strong>
+      on <strong>{{ dooinoName(routine.target.id) }}</strong>
+    </li>
   </ul>
 </div>
 <div>

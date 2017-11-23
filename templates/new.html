@@ -4,7 +4,7 @@
     {% raw %}
     <select ng-disabled="!outs.length" ng-model="selectedOut" ng-change="handleOut()">
       <option value="">Select action...</option>
-      <option ng-repeat="out in outs" value="{{ out.id }}" data-dooino="{{ out.dooino }}"> {{ out.name }}</option>
+      <option ng-repeat="out in outs" value="{{ out.value }}" data-dooino="{{ out.id }}"> {{ out.name }}</option>
     </select>
     {% endraw %}
   </div>
@@ -30,7 +30,7 @@
     {% raw %}
     <select ng-disabled="!ins.length" ng-model="selectedIn" ng-change="handleIn()">
       <option value="">Select action...</option>
-      <option ng-repeat="in in ins" value="{{ in.id }}" data-dooino="{{ in.dooino }}"> {{ in.name }}</option>
+      <option ng-repeat="in in ins" value="{{ in.value }}" data-dooino="{{ in.dooino }}"> {{ in.name }}</option>
     </select>
     {% endraw %}
   </div>

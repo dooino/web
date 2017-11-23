@@ -10,7 +10,7 @@ from time import sleep
 from zeroconf import ServiceBrowser, ServiceStateChange, Zeroconf
 
 import custom_logging
-from dooino import Dooino
+from setup import Setup
 
 logger = logging.getLogger("dooino")
 
@@ -18,7 +18,6 @@ def on_service_state_change(zeroconf, service_type, name, state_change):
     logger.info("Service %s of type %s state changed: %s" % (name, service_type, state_change))
     logger.info("State change: %s" % state_change)
 
-    device = Dooino(name)
 
     if state_change is ServiceStateChange.Added:
         info = zeroconf.get_service_info(service_type, name)
@@ -27,8 +26,9 @@ def on_service_state_change(zeroconf, service_type, name, state_change):
             logger.info("  Weight: %d, priority: %d" % (info.weight, info.priority))
             logger.info("  Server: %s" % (info.server,))
 
+            ip = ("%s:%d" % (socket.inet_ntoa(info.address), info.port))
+            device = Setup(name, ip)
             device.register()
-            device.set("ip", ("%s:%d" % (socket.inet_ntoa(info.address), info.port)))
 
             if info.properties:
                 logger.info("  Properties are:")
@@ -41,8 +41,6 @@ def on_service_state_change(zeroconf, service_type, name, state_change):
         logger.info('\n')
     elif state_change is ServiceStateChange.Removed:
         logger.info("Removing %s" % (name))
-
-        device.destroy()
 
 if __name__ == '__main__':
     logging.basicConfig(level=logging.DEBUG)
