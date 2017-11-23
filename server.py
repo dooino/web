@@ -30,10 +30,10 @@ def routines():
     if request.method == 'POST':
         info = request.get_json()
         data = {
-                'selectedIn': info.get('selectedIn'),
-                'selectedOut': info.get('selectedOut'),
-                'selectedValue': info.get('selectedValue'),
-                'selectedOperation': info.get('selectedOperation'),
+            'selectedIn': info.get('selectedIn'),
+            'selectedOut': info.get('selectedOut'),
+            'selectedValue': info.get('selectedValue'),
+            'selectedOperation': info.get('selectedOperation'),
         }
 
         r.sadd('routines', json.dumps(data))

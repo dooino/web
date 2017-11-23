@@ -19,7 +19,7 @@ class FeaturesFetcher:
         logger.info("Requesting URL: %s", url)
 
         try:
-            data = requests.get("http://" + self.ip_address + "/manifest.json").json()
+            data = requests.get(url, timeout=1).json()
             self.data = data
             logger.info("Fetched data: %s", data)
         except Exception:

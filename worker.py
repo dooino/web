@@ -74,7 +74,34 @@ class Processor:
             logger.info("Skipping routine...")
 
 
-class Worker:
+class PresenceWorker:
+    DOOINOS_KEY = "dooinos"
+
+    def __init__(self):
+        logger.info("Checking presence of devices...")
+        self.redis = redis.StrictRedis(host='localhost', port=6379, db=0)
+
+    def run(self):
+        logger.info("Running...")
+        devices = self.redis.smembers(self.DOOINOS_KEY)
+        keys_to_delete = []
+
+        for device in devices:
+            ip = self.redis.get(device)
+            url = "http://" + ip + "/manifest.json"
+
+            try:
+                requests.get(url, timeout=1)
+                logger.info("Device is present: %s(%s)", device, ip)
+            except Exception:
+                keys_to_delete.append(device)
+                logger.fatal("Device is not present", exc_info=True)
+
+        for key in keys_to_delete:
+            self.redis.srem(self.DOOINOS_KEY, key)
+
+
+class RoutineWorker:
     ROUTINES_KEY = "routines"
 
     def __init__(self):
@@ -107,5 +134,7 @@ class Worker:
 if __name__ == "__main__":
     LOOP_TIME = 2
     while True:
-        Worker().run()
+        PresenceWorker().run()
+        RoutineWorker().run()
+
         time.sleep(LOOP_TIME)
