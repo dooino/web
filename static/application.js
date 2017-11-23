@@ -44,20 +44,25 @@ angular.module('DooinosAppControllers')
 }])
 .controller('NewRoutineController', ['$scope', '$location', 'Dooinos', 'Routine', function($scope, $location, Dooinos, Routine) {
   $scope.dooinos = Dooinos.query({}, function(){
-    var ins = [];
+    $scope.ins = [];
+    $scope.outs = [];
 
-    $scope.ins = $scope.dooinos.map(function(dooino) {
-      return {
-        id: dooino["in"][0].action,
-        name: dooino.name + " " + dooino["in"][0].name // in is reserved
-      };
+    $scope.dooinos.map(function(dooino) {
+      dooino["in"].forEach(function(url) { // in is reserved
+        $scope.ins.push({
+          id: url.action,
+          name: dooino.name + " " + url.name
+        });
+      });
     });
 
-    $scope.outs = $scope.dooinos.map(function(dooino) {
-      return {
-        id: dooino.out[0].action,
-        name: dooino.name + " " + dooino.out[0].name
-      };
+    $scope.dooinos.map(function(dooino) {
+      dooino.out.forEach(function(url) {
+        $scope.outs.push({
+          id: url.action,
+          name: dooino.name + " " + url.name
+        });
+      });
     });
   });
 
