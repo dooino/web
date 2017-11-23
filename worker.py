@@ -5,10 +5,29 @@ import redis
 import json
 import requests
 import time
+import os
 
 import custom_logging
 
 logger = logging.getLogger(__name__)
+
+class Ping:
+    def __init__(self, host):
+        self.host = host
+        logger.fatal(host)
+
+    def run(self):
+        ip = self._parse_ip(self.host)
+        response = os.system("ping -c 1 -W 200 " + ip)
+
+        if response is 0:
+            return True
+
+        return False
+
+    def _parse_ip(self, ip):
+        return ip.split(":")[0]
+
 
 class Requester:
     def __init__(self, url):
@@ -16,7 +35,7 @@ class Requester:
 
     def run(self):
         try:
-            data = requests.get(self.url).json()
+            data = requests.get(self.url, timeout=0.5).json()
             return data["value"]
         except Exception:
             logger.fatal("Could not connect", exc_info=True)
@@ -29,7 +48,7 @@ class Executor:
 
     def run(self):
         try:
-            requests.get(self.url)
+            requests.get(self.url, timeout=0.5)
         except Exception:
             logger.fatal("Could not execute", exc_info=True)
             return None
@@ -37,22 +56,29 @@ class Executor:
 
 class Checker:
     def __init__(self, output, input, operation):
-        self.output = int(output)
-        self.input = int(input)
-        self.operation = int(operation)
+        self.output = output
+        self.input = input
+        self.operation = operation
 
     def run(self):
         logger.debug("Checking %s agains %s", self.output, self.input)
 
-        if self.operation is 0:
+        if self.output is None or self.input is None or self.operation is None:
+            return False
+
+        output = int(self.output)
+        input = int(self.input)
+        operation = int(self.operation)
+
+        if operation is 0:
             logger.debug("equal")
-            return self.output == self.input
-        elif self.operation is 1:
+            return output == input
+        elif operation is 1:
             logger.debug("greater")
-            return self.output > self.input
-        elif self.operation is 2:
+            return output > input
+        elif operation is 2:
             logger.debug("smaller")
-            return self.output < self.input
+            return output < input
         else:
             logger.debug("operation failed")
             return False
@@ -82,7 +108,7 @@ class PresenceWorker:
         self.redis = redis.StrictRedis(host='localhost', port=6379, db=0)
 
     def run(self):
-        logger.info("Running...")
+        logger.info("Running check...")
         devices = self.redis.smembers(self.DOOINOS_KEY)
         keys_to_delete = []
 
@@ -90,10 +116,9 @@ class PresenceWorker:
             ip = self.redis.get(device)
             url = "http://" + ip + "/manifest.json"
 
-            try:
-                requests.get(url, timeout=1)
+            if Ping(ip).run():
                 logger.info("Device is present: %s(%s)", device, ip)
-            except Exception:
+            else:
                 keys_to_delete.append(device)
                 logger.fatal("Device is not present", exc_info=True)
 
